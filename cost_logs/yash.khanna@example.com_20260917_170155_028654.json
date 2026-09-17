@@ -1,0 +1,58 @@
+{
+  "workflow_id": "00b4c67c-b643-42ab-ba18-77e3d7320be6",
+  "ticket_id": 34,
+  "user": "yash.khanna@example.com",
+  "started_at": "2026-09-17T17:01:45.160993+00:00",
+  "completed_at": "2026-09-17T17:01:55.028092+00:00",
+  "total_wall_ms": 9867.09,
+  "total_llm_latency_ms": 9448.84,
+  "overhead_ms": 418.25,
+  "models_used": [
+    "gpt-4o-mini"
+  ],
+  "llm_calls_count": 3,
+  "summary": {
+    "total_input_tokens": 3026,
+    "total_output_tokens": 449,
+    "total_tokens": 3475,
+    "total_cost_usd": 0.0007233
+  },
+  "llm_calls": [
+    {
+      "agent": "triage_agent",
+      "called_at": "2026-09-17T17:01:48.592191+00:00",
+      "model": "gpt-4o-mini",
+      "latency_ms": 3427.01,
+      "input_tokens": 502,
+      "output_tokens": 74,
+      "total_tokens": 576,
+      "input_cost_usd": 7.53e-05,
+      "output_cost_usd": 4.44e-05,
+      "call_cost_usd": 0.0001197
+    },
+    {
+      "agent": "resolution_planner",
+      "called_at": "2026-09-17T17:01:52.011442+00:00",
+      "model": "gpt-4o-mini",
+      "latency_ms": 3011.15,
+      "input_tokens": 1241,
+      "output_tokens": 149,
+      "total_tokens": 1390,
+      "input_cost_usd": 0.00018615,
+      "output_cost_usd": 8.94e-05,
+      "call_cost_usd": 0.00027555
+    },
+    {
+      "agent": "response_agent",
+      "called_at": "2026-09-17T17:01:55.027092+00:00",
+      "model": "gpt-4o-mini",
+      "latency_ms": 3010.68,
+      "input_tokens": 1283,
+      "output_tokens": 226,
+      "total_tokens": 1509,
+      "input_cost_usd": 0.00019245,
+      "output_cost_usd": 0.0001356,
+      "call_cost_usd": 0.00032805
+    }
+  ]
+}

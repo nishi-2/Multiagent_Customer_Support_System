@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SupportCommander — Autonomous Support Resolution</title>
+  <link rel="stylesheet" href="styles.css?v=17" />
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-brand">
+    <div class="header-icon">🤖</div>
+    <span class="logo">SupportCommander</span>
+    <span class="subtitle">Autonomous Support Resolution</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="header-right">
+    <div class="header-status">
+      <div class="status-dot"></div>
+      <span>Live</span>
+    </div>
+    <span class="api-badge">API /api/v1</span>
+    <button class="shortcuts-hint-btn" onclick="showShortcutsHelp()" title="Keyboard shortcuts (?)">⌨</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-wf" onclick="switchTab('workflows')">🔄 Workflows</button>
+      <button class="tab-btn" id="tab-ds" onclick="switchTab('datasets')">📂 Datasets</button>
+      <button class="tab-btn" id="tab-kb" onclick="switchTab('knowledge-base')">📚 KB</button>
+    </div>
+
+    <!-- Workflows controls -->
+    <div id="panel-workflows" class="sidebar-top">
+      <div>
+        <div class="sidebar-label" style="margin-bottom:8px">Run a Workflow</div>
+
+        <!-- Dataset filter -->
+        <div style="margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text-xs);margin-bottom:4px">Dataset (optional)</div>
+          <div class="input-row" style="margin-bottom:4px">
+            <input id="wf-user-id-input" type="text" placeholder="User ID…" style="flex:1" />
+            <button class="btn btn-ghost btn-sm" onclick="loadWFDatasets()" style="white-space:nowrap">Load</button>
+          </div>
+          <select id="wf-dataset-select" style="width:100%;font-size:11px;padding:4px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);display:none" onchange="onWFDatasetChange()">
+            <option value="">— All tickets (default DB) —</option>
+          </select>
+        </div>
+
+        <div class="input-row">
+          <input id="ticket-input" type="number" placeholder="Ticket ID (e.g. 42)" min="1" />
+          <button id="run-btn" class="btn btn-primary">Run</button>
+        </div>
+        <div id="ticket-hint" style="font-size:11px;color:var(--text-xs);margin-top:5px">Ticket IDs 1–8469 are available</div>
+      </div>
+      <div class="divider"></div>
+      <div>
+        <div class="sidebar-label" style="margin-bottom:8px">Find by Workflow ID</div>
+        <div class="input-row">
+          <input id="search-input" type="text" placeholder="Paste workflow ID…" />
+          <button id="search-btn" class="btn btn-ghost">Find</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Datasets controls -->
+    <div id="panel-datasets" class="sidebar-top hidden">
+      <div>
+        <div class="sidebar-label" style="margin-bottom:8px">Your User ID</div>
+        <div class="input-row">
+          <input id="user-id-input" type="text" placeholder="e.g. alice or team-support" />
+          <button class="btn btn-ghost" onclick="loadUserDatasets()">Load</button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="upload-section">
+        <div class="sidebar-label">Upload a CSV Dataset</div>
+        <input type="file" id="csv-file-input" accept=".csv" style="display:none" onchange="onFileSelected()" />
+        <button class="choose-file-btn" onclick="document.getElementById('csv-file-input').click()">
+          📎 Choose CSV file…
+        </button>
+        <div id="file-name-chip" class="file-chip hidden"></div>
+        <button id="upload-btn" class="btn btn-primary" style="width:100%" onclick="startUpload()">
+          ⚡ Upload &amp; Run Pipeline
+        </button>
+      </div>
+    </div>
+
+    <!-- Knowledge Base controls -->
+    <div id="panel-knowledge-base" class="sidebar-top hidden">
+      <div>
+        <div class="sidebar-label" style="margin-bottom:8px">Upload PDF Documents</div>
+        <input type="file" id="kb-file-input" accept=".pdf" multiple style="display:none" onchange="onKBFileSelected()" />
+        <button class="choose-file-btn" onclick="document.getElementById('kb-file-input').click()">
+          📎 Choose PDF files (max 5)…
+        </button>
+        <div id="kb-file-chip" class="file-chip hidden"></div>
+        <button id="kb-upload-btn" class="btn btn-primary" style="width:100%;margin-top:8px" onclick="uploadKBFiles()">
+          ⬆️ Upload to Knowledge Base
+        </button>
+        <div id="kb-upload-result" style="margin-top:6px;font-size:11px"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="sidebar-label" style="margin-bottom:4px">
+        Uploaded Documents
+        <button class="btn btn-ghost btn-sm" style="margin-left:6px;padding:2px 8px;font-size:10px" onclick="loadKBDocs()">↻</button>
+      </div>
+      <div id="kb-stats" style="font-size:11px;color:var(--text-xs);margin-bottom:8px"></div>
+    </div>
+
+    <!-- Workflow list -->
+    <div id="workflow-list" class="workflow-list">
+      <div class="empty-list">
+        <span class="empty-list-icon">🔄</span>
+        Enter a ticket ID above and click <strong>Run</strong>.<br/>
+        Results appear here.
+      </div>
+    </div>
+
+    <!-- KB doc list -->
+    <div id="kb-list" class="workflow-list hidden"></div>
+
+    <!-- Dataset list -->
+    <div id="dataset-list" class="workflow-list hidden">
+      <div class="empty-list">
+        <span class="empty-list-icon">📂</span>
+        Enter your user ID and click <strong>Load</strong>.<br/>
+        Or upload a CSV file above.
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── Main panel ── -->
+  <main class="main-panel" id="main-panel">
+    <!-- populated by JS -->
+  </main>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="app.js?v=17"></script>
+</body>
+</html>
